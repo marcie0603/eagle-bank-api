@@ -73,7 +73,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public  ResponseEntity<?> deleteUser(@PathVariable Long id, Authentication authentication) {
+    public ResponseEntity<?> deleteUser(@PathVariable Long id, Authentication authentication) {
         var userOpt = userRepository.findById(id);
         if (userOpt.isEmpty()) {
             return ResponseEntity.notFound().build();

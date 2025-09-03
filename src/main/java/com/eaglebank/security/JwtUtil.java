@@ -23,7 +23,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String extracUsername(String token){
+    public String extracUsername(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
