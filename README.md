@@ -57,11 +57,11 @@ Server starts on: http://localhost:8080
 POST http://localhost:8080/v1/users
 ```
 Body (JSON):
-{
+**{
 "username": "maria",
 "email": "maria@test.com",
 "password": "12345"
-}
+}**
 
 2. Login(Get JWT)
 
