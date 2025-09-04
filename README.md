@@ -51,6 +51,8 @@ Server starts on: http://localhost:8080
 
 ## Postman Testing Guide
 
+## Users
+
 1. Create User(Signup)
 
 ```bash
@@ -62,6 +64,11 @@ Body (JSON):
 "email": "maria@test.com",
 "password": "12345"
 }**
+
+Responses:
+- 200 OK → user created (password is write-only, not returned)
+- 400 Bad Request → missing required fields
+- 409 Conflict → username or email already in use
 
 2. Login(Get JWT)
 
@@ -77,12 +84,21 @@ Body (JSON):
 Respons:
 **Bearer eyJhbGciOiJIUzI1NiJ9...**
 
+Responses:
+- 200 OK → user created (password is write-only, not returned).
+- 401 Unauthorized → invalid credentials
+
 3. Fetch User(Authenticated)
 
 ```bash
 GET http://localhost:8080/v1/users/{id}
 ```
 Headers: **Authorization: Bearer `<token>`**
+
+Responses:
+- 200 OK → returns user details (without password)
+- 403 Forbidden → cannot fetch another user’s details
+- 404 Not Found → user does not exist
 
 4. Update User
 
@@ -96,9 +112,88 @@ Body (JSON):
 "email": "maria+new@test.com"
 }**
 
+Responses:
+- 200 OK → user updated
+- 403 Forbidden → cannot update another user
+- 404 Not Found → user does not exist
+
 5. Delete User
 
 ```bash
 DELETE http://localhost:8080/v1/users/{id}
 ```
 Headers: **Authorization: Bearer `<token>`**
+
+Responses:
+- 200 OK → user deleted (only if they have no accounts)
+- 403 Forbidden → cannot delete another user
+- 404 Not Found → user does not exist
+- 409 Conflict → user still has bank accounts
+
+## Accounts
+
+1. Create Account
+
+```bash
+POST http://localhost:8080/v1/accounts
+```
+Headers: **Authorization: Bearer `<token>`**
+
+Responses:
+- 200 OK → account created with unique account number, balance = 0
+- 400 Bad Request → invalid/missing data
+
+2. List Accounts
+
+```bash
+GET http://localhost:8080/v1/accounts
+```
+Headers: **Authorization: Bearer `<token>`**
+
+Responses:
+- 200 OK → list of accounts for the authenticated user
+
+3. Fetch Account
+
+```bash
+GET http://localhost:8080/v1/accounts/{id}
+```
+Headers: **Authorization: Bearer `<token>`**
+
+Responses:
+- 200 OK → account details
+- 403 Forbidden → cannot access another user’s account
+- 404 Not Found → account does not exist
+
+4. Update Account
+
+```bash
+PATCH http://localhost:8080/v1/accounts/{id}
+```
+Headers: **Authorization: Bearer `<token>`**
+
+Body (JSON):
+**{
+"balance": 2000.00
+}**
+
+Responses:
+- 200 OK → account updated
+- 403 Forbidden → cannot update another user’s account
+- 404 Not Found → account does not exist
+
+5. Delete CCOUNT
+
+```bash
+DELETE http://localhost:8080/v1/accounts/{id}
+```
+Headers: **Authorization: Bearer `<token>`**
+
+Responses:
+- 200 OK → account deleted
+- 403 Forbidden → cannot delete another user’s account
+- 404 Not Found → account does not exist
+
+
+
+
