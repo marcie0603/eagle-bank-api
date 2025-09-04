@@ -50,27 +50,27 @@ public class AccountController {
         return ResponseEntity.ok(accounts);
     }
 
-   //Fetch single account
+    //Fetch single account
     @GetMapping("/{id}")
     public ResponseEntity<?> getAccount(@PathVariable Long id, Authentication authentication) {
         String username = authentication.getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return accountRepository.findByIdAndUser(id,user)
+        return accountRepository.findByIdAndUser(id, user)
                 .<ResponseEntity<?>>map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(403).body("Forbidden: cannot access another user's account"));
     }
 
     //Update account (only owner)
     @PatchMapping("/{id}")
-    public ResponseEntity<?> updateAccount(@PathVariable Long id, @RequestBody Account updated, Authentication authentication){
+    public ResponseEntity<?> updateAccount(@PathVariable Long id, @RequestBody Account updated, Authentication authentication) {
         String username = authentication.getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return accountRepository.findByIdAndUser(id,user).<ResponseEntity<?>>map(account -> {
-            if (updated.getBalance() != null){
+        return accountRepository.findByIdAndUser(id, user).<ResponseEntity<?>>map(account -> {
+            if (updated.getBalance() != null) {
                 account.setBalance(updated.getBalance());
             }
             accountRepository.save(account);
@@ -80,12 +80,12 @@ public class AccountController {
 
     //Delete account
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteAccount(@PathVariable Long id, Authentication authentication){
+    public ResponseEntity<?> deleteAccount(@PathVariable Long id, Authentication authentication) {
         String username = authentication.getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return accountRepository.findByIdAndUser(id,user).map(account -> {
+        return accountRepository.findByIdAndUser(id, user).map(account -> {
             accountRepository.delete(account);
             return ResponseEntity.ok("Account deleted");
         }).orElse(ResponseEntity.status(403).body("Forbidden: cannot update another user's account"));

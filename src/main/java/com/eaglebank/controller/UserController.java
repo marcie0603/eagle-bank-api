@@ -1,6 +1,7 @@
 package com.eaglebank.controller;
 
 import com.eaglebank.model.User;
+import com.eaglebank.repository.AccountRepository;
 import com.eaglebank.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
 
-    public UserController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository, AccountRepository accountRepository) {
         this.userRepository = userRepository;
+        this.accountRepository = accountRepository;
     }
 
     @PostMapping
@@ -85,7 +88,10 @@ public class UserController {
             return ResponseEntity.status(403).body("Forbidden: cannot delete another user");
         }
 
-        //TODO: when bankaccount is added, check if user has accounts
+        if (!accountRepository.findByUser(user).isEmpty()) {
+            return ResponseEntity.status(409).body("Conflict: user has active bank accounts");
+        }
+
         userRepository.delete(userOpt.get());
         return ResponseEntity.ok("User deleted");
     }
