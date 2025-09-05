@@ -182,7 +182,7 @@ Responses:
 - 403 Forbidden → cannot update another user’s account
 - 404 Not Found → account does not exist
 
-5. Delete CCOUNT
+5. Delete Account
 
 ```bash
 DELETE http://localhost:8080/v1/accounts/{id}
