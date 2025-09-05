@@ -53,7 +53,7 @@ Server starts on: http://localhost:8080
 
 ## Users
 
-1. Create User(Signup)
+1. #### Create User(Signup)
 
 ```bash
 POST http://localhost:8080/v1/users
@@ -70,7 +70,7 @@ Responses:
 - 400 Bad Request → missing required fields
 - 409 Conflict → username or email already in use
 
-2. Login(Get JWT)
+2. #### Login(Get JWT)
 
 ```bash
 POST http://localhost:8080/auth/login
@@ -88,7 +88,7 @@ Responses:
 - 200 OK → user created (password is write-only, not returned).
 - 401 Unauthorized → invalid credentials
 
-3. Fetch User(Authenticated)
+3. #### Fetch User(Authenticated)
 
 ```bash
 GET http://localhost:8080/v1/users/{id}
@@ -100,7 +100,7 @@ Responses:
 - 403 Forbidden → cannot fetch another user’s details
 - 404 Not Found → user does not exist
 
-4. Update User
+4. #### Update User
 
 ```bash
 PATCH http://localhost:8080/v1/users/{id}
@@ -117,7 +117,7 @@ Responses:
 - 403 Forbidden → cannot update another user
 - 404 Not Found → user does not exist
 
-5. Delete User
+5. #### Delete User
 
 ```bash
 DELETE http://localhost:8080/v1/users/{id}
@@ -132,7 +132,7 @@ Responses:
 
 ## Accounts
 
-1. Create Account
+1. #### Create Account
 
 ```bash
 POST http://localhost:8080/v1/accounts
@@ -143,7 +143,7 @@ Responses:
 - 200 OK → account created with unique account number, balance = 0
 - 400 Bad Request → invalid/missing data
 
-2. List Accounts
+2. #### List Accounts
 
 ```bash
 GET http://localhost:8080/v1/accounts
@@ -153,7 +153,7 @@ Headers: **Authorization: Bearer `<token>`**
 Responses:
 - 200 OK → list of accounts for the authenticated user
 
-3. Fetch Account
+3. #### Fetch Account
 
 ```bash
 GET http://localhost:8080/v1/accounts/{id}
@@ -165,7 +165,7 @@ Responses:
 - 403 Forbidden → cannot access another user’s account
 - 404 Not Found → account does not exist
 
-4. Update Account
+4. #### Update Account
 
 ```bash
 PATCH http://localhost:8080/v1/accounts/{id}
@@ -182,7 +182,7 @@ Responses:
 - 403 Forbidden → cannot update another user’s account
 - 404 Not Found → account does not exist
 
-5. Delete Account
+5. #### Delete Account
 
 ```bash
 DELETE http://localhost:8080/v1/accounts/{id}
@@ -193,6 +193,57 @@ Responses:
 - 200 OK → account deleted
 - 403 Forbidden → cannot delete another user’s account
 - 404 Not Found → account does not exist
+
+## Transactions
+
+1. #### Create Transaction
+
+```bash
+POST http://localhost:8080/v1/accounts/{accountId}/transactions
+```
+Headers: **Authorization: Bearer `<token>`**
+
+Body (JSON):
+**{
+"type": "deposit",
+"amount": 500.00
+}**
+
+Body (JSON):
+**{
+"type": "withdrawal",
+"amount": 200.00
+}**
+
+Responses:
+- 200 OK → returns both the transaction and updated account balance
+- 400 Bad Request → missing or invalid fields / invalid type
+- 403 Forbidden → account does not belong to user
+- 404 Not Found → account does not exist
+- 422 Unprocessable Entity → withdrawal attempted with insufficient funds
+
+2. #### List Transactions
+
+```bash
+GET http://localhost:8080/v1/accounts/{accountId}/transaction
+```
+Headers: **Authorization: Bearer `<token>`**
+
+Responses:
+- 200 OK → list of transactions for the authenticated user
+
+3. #### Fetch Transaction
+
+```bash
+GET http://localhost:8080/v1/accounts/{accountId}/transactions/{transactionId}
+```
+Headers: **Authorization: Bearer `<token>`**
+
+Responses:
+- 200 OK → returns transaction details
+- 403 Forbidden → transaction belongs to another user
+- 404 Not Found → transaction or account does not exist
+
 
 
 
