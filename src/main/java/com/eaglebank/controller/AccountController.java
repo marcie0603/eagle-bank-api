@@ -23,7 +23,6 @@ public class AccountController {
         this.userRepository = userRepository;
     }
 
-    //Create account
     @PostMapping
     public ResponseEntity<?> createAccount(Authentication authentication) {
         String username = authentication.getName();
@@ -39,7 +38,6 @@ public class AccountController {
         return ResponseEntity.ok(saved);
     }
 
-    //List all accounts for thr logged-in user
     @GetMapping
     public ResponseEntity<?> listAccounts(Authentication authentication) {
         String username = authentication.getName();
@@ -50,7 +48,6 @@ public class AccountController {
         return ResponseEntity.ok(accounts);
     }
 
-    //Fetch single account
     @GetMapping("/{id}")
     public ResponseEntity<?> getAccount(@PathVariable Long id, Authentication authentication) {
         String username = authentication.getName();
@@ -62,7 +59,6 @@ public class AccountController {
                 .orElseGet(() -> ResponseEntity.status(403).body("Forbidden: cannot access another user's account"));
     }
 
-    //Update account (only owner)
     @PatchMapping("/{id}")
     public ResponseEntity<?> updateAccount(@PathVariable Long id, @RequestBody Account updated, Authentication authentication) {
         String username = authentication.getName();
@@ -78,7 +74,6 @@ public class AccountController {
         }).orElseGet(() -> ResponseEntity.status(403).body("Forbidden: cannot update another user's account"));
     }
 
-    //Delete account
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteAccount(@PathVariable Long id, Authentication authentication) {
         String username = authentication.getName();

@@ -29,7 +29,6 @@ public class TransactionController {
         this.userRepository = userRepository;
     }
 
-    //create transaction( deposit or withdrawal)
     @PostMapping
     public ResponseEntity<?> createTransaction(@PathVariable Long accountId, @RequestBody Transaction txRequest, Authentication authentication) {
 
@@ -79,7 +78,6 @@ public class TransactionController {
         );
     }
 
-    //List all transaction for this account
     @GetMapping
     public ResponseEntity<?> listTransactions(@PathVariable Long accountId, Authentication authentication) {
 
@@ -98,7 +96,6 @@ public class TransactionController {
         return ResponseEntity.ok(transactions);
     }
 
-    //Fetch a single transaction
     @GetMapping("/{transactionID}")
     public ResponseEntity<?> getTransaction(@PathVariable Long accountId, @PathVariable Long transactionId, Authentication authentication) {
 
